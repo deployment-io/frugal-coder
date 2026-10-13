@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "architecture": {
+    "model_type": "qwen3_5",
+    "architectures": [
+      "Qwen3_5ForConditionalGeneration"
+    ],
+    "text_model_type": "qwen3_5_text",
+    "recognized": true,
+    "execution_implemented": false
+  },
+  "layout": "single_safetensors",
+  "files": [
+    {
+      "name": "model.safetensors",
+      "file_bytes": 236,
+      "header_bytes": 192,
+      "payload_bytes": 36,
+      "tensors": [
+        {
+          "name": "demo.scale",
+          "shape": [
+            3
+          ],
+          "dtype": "F32",
+          "data_offsets": [
+            24,
+            36
+          ],
+          "payload_bytes": 12
+        },
+        {
+          "name": "demo.weight",
+          "shape": [
+            2,
+            3
+          ],
+          "dtype": "F32",
+          "data_offsets": [
+            0,
+            24
+          ],
+          "payload_bytes": 24
+        }
+      ]
+    }
+  ],
+  "total_tensor_payload_bytes": 36,
+  "total_weight_file_bytes": 236,
+  "limitations": [
+    "Metadata and byte layout validated; weight payload values and integrity not verified.",
+    "Architecture recognition is declarative; tensor names are not checked against a model architecture.",
+    "Model execution is not implemented; file and payload bytes are not runtime RAM estimates.",
+    "Only a flat directory with config.json and one model.safetensors is supported; indexed/sharded layouts are rejected.",
+    "Other regular assets are ignored; tokenizer, prompts, and configuration semantics are not validated."
+  ]
+}

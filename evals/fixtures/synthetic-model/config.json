@@ -1,0 +1,10 @@
+{
+  "architectures": [
+    "Qwen3_5ForConditionalGeneration"
+  ],
+  "model_type": "qwen3_5",
+  "text_config": {
+    "model_type": "qwen3_5_text"
+  },
+  "fixture_note": "Synthetic metadata only; not an executable Qwen checkpoint."
+}
