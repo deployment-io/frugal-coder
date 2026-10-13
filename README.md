@@ -1,13 +1,57 @@
 # Frugal Coder
 
-Frugal Coder is an **experimental** Rust coding-agent project for delay-tolerant
-engineering work on commodity CPUs. Its intended inference backend is independent
-and owned here. Resource efficiency, model capability, and verified task success
-are goals to measure, not demonstrated advantages.
+Frugal Coder is an **experimental** project building a coding agent in Rust with
+its own CPU-only inference backend. The vision is to make verified engineering
+work practical on commodity hardware, including tasks where waiting longer for
+a correct result is acceptable.
+
+## Vision
+
+We want an agent that can understand a repository, make a scoped change, run the
+relevant checks, and return a result backed by verification evidence. Model
+execution should happen locally on ordinary CPUs, with explicit resource limits
+and a path to resuming longer-running work.
+
+The intended product combines three parts:
+
+- **An independent CPU inference backend.** We own model execution and the
+  numerical implementation. No GPU/NPU execution paths, complete external
+  inference engine, or hosted-model fallback.
+- **A standalone coding agent and CLI.** The agent will use that backend to work
+  on engineering tasks, report failures honestly, and distinguish changes made
+  from results actually verified.
+- **Future AgentBox integration.** Frugal Coder will become another agent
+  executable for Deployment.io's existing Implement and Review stages.
+  Deployment.io retains stage orchestration and acceptance policies. QA's
+  integration contract is still developing.
+
+Resource efficiency and useful coding capability must be demonstrated together.
+We plan to measure task success, correctness, latency, memory, and relevant
+energy/cost tradeoffs on documented hardware. No speed, cost, energy, or
+coding-quality advantage has been demonstrated yet. Correctness comes before
+performance optimization.
+
+See the [architecture](docs/architecture.md) and
+[roadmap with acceptance criteria](docs/roadmap.md) for the path from numerical
+foundations to correct model inference, useful standalone agent tasks, and
+integration.
+
+## Current status: M0 foundation
 
 **M0 performs local model metadata inspection and scalar numerical operations.
 It does not perform model inference, generate text, execute tools, or complete
 agent tasks.** Recognizing a model architecture does not mean it can execute it.
+
+| Component | Code | Implemented today |
+| --- | --- | --- |
+| `frugal-backend` | [Numerics](crates/frugal-backend/src/tensor.rs), [inspection](crates/frugal-backend/src/inspect.rs) | Checked contiguous f32 tensors, scalar matmul, row RMSNorm, row softmax, SiLU, and local model metadata inspection. |
+| `frugal-agent` | [Library boundary](crates/frugal-agent/src/lib.rs) | Module documentation only; no agent execution API yet. |
+| `frugal-coder` | [CLI](crates/frugal-coder/src/main.rs) | `--help`, `--version`, and `inspect [--json] <model-directory>`. |
+
+Qwen/Qwen3.5-0.8B's text path is the proposed first correctness candidate. It is
+not a supported inference model or evidence of coding-agent ability. The
+[first-model plan](docs/first-model.md) records verified source details and the
+remaining validation work.
 
 ## Try M0
 
@@ -34,19 +78,6 @@ and `model.safetensors` files is supported. Indexed/sharded layouts, including
 the official first-model checkpoint layout, are explicitly unsupported in M0.
 See [the inspection contract](docs/inspection.md) and
 [JSON schema v1](docs/inspect-v1.schema.json).
-
-## Implemented and planned
-
-- `frugal-backend`: checked contiguous f32 storage, scalar matmul, row RMSNorm,
-  row softmax, SiLU, and local metadata inspection.
-- `frugal-agent`: intentionally minimal library boundary; no execution API yet.
-- `frugal-coder`: `--help`, `--version`, and `inspect [--json] <model-directory>`.
-
-The product is CPU-only: no GPU/NPU paths, complete external inference engines,
-or hosted-model fallback. Qwen/Qwen3.5-0.8B's text path is a **proposed correctness
-candidate**, not a supported inference model or evidence of coding-agent ability.
-See [the verified first-model plan](docs/first-model.md),
-[architecture](docs/architecture.md), and [acceptance-based roadmap](docs/roadmap.md).
 
 ## Develop and validate
 
